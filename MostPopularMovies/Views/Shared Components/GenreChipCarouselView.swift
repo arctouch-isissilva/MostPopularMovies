@@ -15,7 +15,7 @@ struct GenreChipCarouselView: View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack {
         ForEach(genres, id: \.self) { genre in
-          AvenirText(text: genre, textSize: 14)
+          AvenirText(text: genre, textSize: 14, fontType: .body)
             .padding(6)
             .background(Color("ChipColor"))
             .clipShape(Capsule())

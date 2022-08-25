@@ -8,7 +8,7 @@
 import Foundation
 
 enum APIContants {
-  static let apiKey = "ad4ed54fc51b304c68f3bcc8e8792b15"
-  static let baseAPIURL = "https://api.themoviedb.org/3"
-  static let baseImageURL = "https://image.tmdb.org/t/p/w500"
+  static let baseAPIURL = ProcessInfo.processInfo.environment["BASE_URL"] ?? ""
+  static let baseImageURL = ProcessInfo.processInfo.environment["BASE_IMAGE_URL"] ?? ""
+  static let apiKey: String = ProcessInfo.processInfo.environment["API_KEY"] ?? ""
 }

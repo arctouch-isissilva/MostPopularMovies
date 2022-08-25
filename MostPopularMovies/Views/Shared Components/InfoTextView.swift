@@ -14,9 +14,9 @@ struct InfoTextView: View {
   
   var body: some View {
     HStack {
-      AvenirText(text: infoText, textSize: 14)
+      AvenirText(text: infoText, textSize: 14, fontType: .body)
         .padding(.horizontal, 8)
-      AvenirText(text: dataText, textSize: 14)
+      AvenirText(text: dataText, textSize: 14, fontType: .body)
         .padding(.trailing, 8)
       Spacer()
     }

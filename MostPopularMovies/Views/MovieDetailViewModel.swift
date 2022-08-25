@@ -10,11 +10,17 @@ import SwiftUI
 @MainActor
 final class MovieDetailViewModel: ObservableObject {
 
-  private let movieService = MovieServiceImplementation.self
+  let movieId: Int
+  private let movieService: MovieService
   @Published var movie: Movie?
   @Published var isLoading = false
   @Published var error: MovieError? = nil
   
+  init(movieId: Int, movieService: MovieService = MovieServiceImplementation()) {
+    self.movieService = movieService
+    self.movieId = movieId
+  }
+
   func loadMovie(id: Int) {
     isLoading = true
     defer { isLoading = false }

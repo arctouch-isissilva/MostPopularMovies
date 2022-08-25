@@ -8,37 +8,38 @@
 import SwiftUI
 
 struct MovieListView: View {
-  @ObservedObject private var viewModel = MovieListViewModel()
+
+  @StateObject private var viewModel = MovieListViewModel()
   
   var body: some View {
     NavigationView {
-      List {
-        if (viewModel.movies != nil) && (viewModel.isLoading == false) {
-          ForEach(viewModel.movies ?? [], id: \.self) { movie in
-            MovieCardView(movie: movie)
-              .background(NavigationLink("", destination: MovieDetailView(movieId: movie.id)))
+      List(viewModel.movies) { movie in
+        NavigationLink {
+          MovieDetailView(viewModel: MovieDetailViewModel(movieId: movie.id))
+        } label: {
+          if !viewModel.movies.isEmpty && !viewModel.isLoading {
+            MovieCardView(movie: movie, isDetailCard: false)
+              .frame(maxWidth: .infinity, alignment: .center)
               .onAppear {
-                if movie.id == viewModel.movies?.last?.id {
-                  viewModel.loadMore()
+                if movie.id == viewModel.movies.last?.id {
+                  viewModel.loadMovies()
                 }
               }
+          } else {
+            ProgressView()
           }
-          .frame(maxWidth: .infinity, alignment: .center)
-          .listRowSeparator(/*@START_MENU_TOKEN@*/.hidden/*@END_MENU_TOKEN@*/)
-          
-        } else {
-          ProgressView()
         }
+        .listRowBackground(Color.clear)
       }
       .navigationTitle("Most Popular")
       .buttonStyle(.borderless)
-      .listRowBackground(Color.clear)
       .listStyle(.inset)
       .foregroundColor(.clear)
       .onAppear {
-        viewModel.loadGenresList()
+        viewModel.loadGenresAndMoviesList()
       }
       .errorAlert(error: $viewModel.error)
     }
+    .phoneOnlyStackNavigationView()
   }
 }

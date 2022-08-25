@@ -7,9 +7,9 @@
 
 import Foundation
 
-final class GenreCash {
+final class GenreCache {
   
-  static let shared = GenreCash()
+  static let shared = GenreCache()
   private var genreList: [Genre] = []
   
   var genres: [Genre] {
@@ -20,9 +20,13 @@ final class GenreCash {
     genreList = list
   }
 
-  func getGenreByIds(idList: [Int]) -> [String] {
+  func getGenresBy(_ indexes: [Int]) -> [String] {
     return genreList.filter { genre in
-      idList.contains { genre.id == $0 }
+      indexes.contains { genre.id == $0 }
     }.map { $0.name }
+  }
+  
+  func clearGenreCash() {
+    genreList = []
   }
 }

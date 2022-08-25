@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct AvenirText: View {
+
   let text: String
   let textSize: CGFloat
-
-    var body: some View {
-        Text(text)
-        .font(.custom("Avenir Heavy", size: textSize))
-        .foregroundColor(.white)
-        .lineLimit(1)
-    }
+  let fontType: Font?
+  
+  var body: some View {
+    Text(text)
+      .font(.custom("Avenir Heavy", size: textSize))
+      .font(fontType)
+      .foregroundColor(.white)
+      .lineLimit(2)
+  }
 }

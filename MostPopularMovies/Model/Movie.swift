@@ -24,6 +24,7 @@ struct Movie: Decodable {
   let releaseDate: String?
   let genreIds: [Int]?
   let genres: [Genre]?
+  let homepage: String?
   
   var popularityText: String {
     return String(format: "%.1f", voteAverage ?? 0)
@@ -56,11 +57,11 @@ struct Movie: Decodable {
 
 extension Movie {
   func getGenres() -> [String] {
-    return GenreCash.shared.getGenreByIds(idList: genreIds ?? [])
+    return GenreCache.shared.getGenresBy(genreIds ?? [])
   }
   
   func getGenresFromDetails() -> [String] {
-    return GenreCash.shared.getGenreByIds(idList: genres?.map { $0.id } ?? [])
+    return GenreCache.shared.getGenresBy(genres?.map { $0.id } ?? [])
   }
 }
 

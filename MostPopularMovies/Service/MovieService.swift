@@ -8,14 +8,14 @@
 import Foundation
 
 protocol MovieService {
-  static func fetchPopularMovies(with currentPage: Int) async throws -> PopularMoviesResponse
-  static func fetchMovieDetails(id: Int) async throws -> Movie
-  static func fetchGenresList() async throws -> Genres
+  func fetchPopularMovies(with currentPage: Int) async throws -> PopularMoviesResponse
+  func fetchMovieDetails(id: Int) async throws -> Movie
+  func fetchGenresList() async throws -> Genres
 }
 
-enum MovieServiceImplementation: MovieService {
+struct MovieServiceImplementation: MovieService {
 
-  static func fetchMovieDetails(id: Int) async throws -> Movie {
+  func fetchMovieDetails(id: Int) async throws -> Movie {
     guard let url = URL(string: "\(APIContants.baseAPIURL)/movie/\(id)?api_key=\(APIContants.apiKey)") else {
       throw MovieError.failedEndpoint
     }
@@ -23,7 +23,7 @@ enum MovieServiceImplementation: MovieService {
     return try  Utils.jsonDecoder.decode(Movie.self, from: data)
   }
   
-  static func fetchPopularMovies(with currentPage: Int) async throws -> PopularMoviesResponse {
+  func fetchPopularMovies(with currentPage: Int) async throws -> PopularMoviesResponse {
     guard let url = URL(string: "\(APIContants.baseAPIURL)/movie/popular?api_key=\(APIContants.apiKey)&page=\(currentPage)") else {
       throw MovieError.failedEndpoint
     }
@@ -31,8 +31,8 @@ enum MovieServiceImplementation: MovieService {
     return try  Utils.jsonDecoder.decode(PopularMoviesResponse.self, from: data)
   }
  
-  static func fetchGenresList() async throws -> Genres {
-    guard let url = URL(string: "https://api.themoviedb.org/3/genre/movie/list?api_key=\(APIContants.apiKey)") else {
+  func fetchGenresList() async throws -> Genres {
+    guard let url = URL(string: "\(APIContants.baseAPIURL)/genre/movie/list?api_key=\(APIContants.apiKey)") else {
       throw MovieError.failedEndpoint
     }
     let (data, _) = try await URLSession.shared.data(from: url)
@@ -50,7 +50,7 @@ enum MovieError: Error {
     case .failedEndpoint:
       return "Error"
     default:
-      return "Something whent wrong!"
+      return "Something went wrong!"
     }
   }
   
@@ -61,22 +61,7 @@ enum MovieError: Error {
     case .failedFetchingMovies:
       return "Failed fetching movies"
     case .failedFetchingGenres:
-      return "Failed fetchin genres"
+      return "Failed fetching genres"
     }
   }
-}
-
-enum Utils {
-    static let jsonDecoder: JSONDecoder = {
-        let jsonDecoder = JSONDecoder()
-        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-        jsonDecoder.dateDecodingStrategy = .formatted(dateFormatter)
-        return jsonDecoder
-    }()
-    
-    static let dateFormatter: DateFormatter = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-mm-dd"
-        return dateFormatter
-    }()
 }
