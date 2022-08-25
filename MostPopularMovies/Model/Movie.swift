@@ -32,7 +32,7 @@ struct Movie: Decodable {
   
   var durationText: String {
     let formatter = DateComponentsFormatter()
-    formatter.unitsStyle = .full
+    formatter.unitsStyle = .abbreviated
     formatter.allowedUnits = [.hour, .minute]
     return formatter.string(from: TimeInterval(runtime ?? 0) * 60) ?? "-"
   }
