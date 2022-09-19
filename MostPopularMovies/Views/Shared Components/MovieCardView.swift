@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MovieCardView: View {
   
-  let movie: Movie
+  let movie: MovieEntity
   let isDetailCard: Bool
   @State private var orientation = UIDevice.current.orientation
   
@@ -78,11 +78,8 @@ struct MovieCardView: View {
             .foregroundColor(Color("ChipColor"))
             .padding(8)
         }
-        
-        GenreChipCarouselView(genres: movie.getGenresFromDetails())
-      } else {
-        GenreChipCarouselView(genres: movie.getGenres())
       }
+      GenreChipCarouselView(genres: PersistenceManager.shared.getGenres(ids: movie.genresIds))
     }
   }
 }

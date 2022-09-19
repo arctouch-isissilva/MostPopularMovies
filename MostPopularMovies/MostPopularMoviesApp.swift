@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct MostPopularMoviesApp: App {
+  let persistence = PersistenceManager.shared
+
   var body: some Scene {
     WindowGroup {
       MovieListView()
+        .environment(\.managedObjectContext, persistence.container.viewContext)
     }
   }
 }

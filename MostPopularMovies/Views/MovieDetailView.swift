@@ -21,9 +21,9 @@ struct MovieDetailView: View {
   
   @ViewBuilder
   private var movieDetailCardView: some View {
-    if let movie = viewModel.movie {
+    if let movie = viewModel.movieEntity {
       ScrollView {
-      MovieCardView(movie: movie, isDetailCard: true)
+        MovieCardView(movie: movie, isDetailCard: true)
       }
     } else {
       ProgressView()

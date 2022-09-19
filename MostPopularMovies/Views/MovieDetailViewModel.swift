@@ -12,7 +12,7 @@ final class MovieDetailViewModel: ObservableObject {
 
   let movieId: Int
   private let movieService: MovieService
-  @Published var movie: Movie?
+  @Published var movieEntity: MovieEntity?
   @Published var isLoading = false
   @Published var error: MovieError? = nil
   
@@ -27,7 +27,9 @@ final class MovieDetailViewModel: ObservableObject {
     
     Task {
       do {
-        movie = try await movieService.fetchMovieDetails(id: id)
+        let movie = try await movieService.fetchMovieDetails(id: id)
+        PersistenceManager.shared.updateDataToCoreData(movie: movie)
+        movieEntity = PersistenceManager.shared.getMovie(by: movieId)
       } catch {
         self.error = MovieError.failedFetchingMovies
       }

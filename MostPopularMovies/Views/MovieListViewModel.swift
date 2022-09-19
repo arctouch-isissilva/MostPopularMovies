@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
+import CoreData
 
 @MainActor
 final class MovieListViewModel: ObservableObject {
-  
-  @Published var movies: [Movie] = []
+
   @Published var isLoading: Bool = false
   @Published var error: MovieError?
   @Published var currentPage = 0
@@ -22,13 +22,13 @@ final class MovieListViewModel: ObservableObject {
   }
   
   func loadGenresAndMoviesList() {
-    guard GenreCache.shared.genres.isEmpty else { return }
+    guard PersistenceManager.shared.fetchGenresList().isEmpty else { return }
     isLoading = true
     defer { isLoading = false }
     Task {
       do {
         let genres = try await movieService.fetchGenresList().genres
-        GenreCache.shared.saveGenreList(list: genres)
+        PersistenceManager.shared.saveDataOf(genres: genres)
         loadMovies()
       } catch {
         self.error = MovieError.failedFetchingGenres
@@ -44,7 +44,7 @@ final class MovieListViewModel: ObservableObject {
     Task {
       do {
         moviesResponse = try await movieService.fetchPopularMovies(with: currentPage)
-        movies.isEmpty ? movies = moviesResponse?.results ?? [] : movies.append(contentsOf: moviesResponse?.results ?? [])
+        PersistenceManager.shared.saveDataOf(movies: moviesResponse!.results)
       } catch {
         self.error = MovieError.failedFetchingMovies
       }

@@ -20,5 +20,117 @@
             landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "03B673F1-4C50-4335-B538-7D3CB595EB3D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MostPopularMovies/MovieEntity+CoreDataProperties.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
+            landmarkName = "getGenresFromDetails"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "03B673F1-4C50-4335-B538-7D3CB595EB3D - 45266d96485ba99c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MostPopularMovies.MovieEntity.getGenresFromDetails.getter : Swift.Array&lt;Swift.String&gt;"
+                  moduleName = "MostPopularMovies"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/isissilva/Desktop/MostPopularMovies/MostPopularMovies/MovieEntity+CoreDataProperties.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68"
+                  offsetFromSymbolStart = "40">
+               </Location>
+               <Location
+                  uuid = "03B673F1-4C50-4335-B538-7D3CB595EB3D - 1562d89ae74713d1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (MostPopularMovies.GenreEntity) -&gt; Swift.String in MostPopularMovies.MovieEntity.getGenresFromDetails.getter : Swift.Array&lt;Swift.String&gt;"
+                  moduleName = "MostPopularMovies"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/isissilva/Desktop/MostPopularMovies/MostPopularMovies/MovieEntity+CoreDataProperties.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "68"
+                  endingLineNumber = "68"
+                  offsetFromSymbolStart = "36">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "249CFD0B-9812-4A0C-976F-6442E402DE49"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MostPopularMovies/MovieEntity+CoreDataProperties.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "genresArray"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "249CFD0B-9812-4A0C-976F-6442E402DE49 - 485ddcd004052ea0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MostPopularMovies.MovieEntity.genresArray.getter : Swift.Array&lt;MostPopularMovies.GenreEntity&gt;"
+                  moduleName = "MostPopularMovies"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/isissilva/Desktop/MostPopularMovies/MostPopularMovies/MovieEntity+CoreDataProperties.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "52">
+               </Location>
+               <Location
+                  uuid = "249CFD0B-9812-4A0C-976F-6442E402DE49 - 485ddcd004052ea0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "MostPopularMovies.MovieEntity.genresArray.getter : Swift.Array&lt;MostPopularMovies.GenreEntity&gt;"
+                  moduleName = "MostPopularMovies"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/isissilva/Desktop/MostPopularMovies/MostPopularMovies/MovieEntity+CoreDataProperties.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "32"
+                  endingLineNumber = "32"
+                  offsetFromSymbolStart = "100">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "023D4A70-A7E3-48E6-9F3F-D17ED7D01B3B"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MostPopularMovies/MovieEntity+CoreDataProperties.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "genresArray"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

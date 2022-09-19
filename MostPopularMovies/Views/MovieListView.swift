@@ -10,18 +10,19 @@ import SwiftUI
 struct MovieListView: View {
 
   @StateObject private var viewModel = MovieListViewModel()
+  @FetchRequest(entity: MovieEntity.entity(), sortDescriptors: []) var movies: FetchedResults<MovieEntity>
   
   var body: some View {
     NavigationView {
-      List(viewModel.movies) { movie in
+      List(movies) { movie in
         NavigationLink {
           MovieDetailView(viewModel: MovieDetailViewModel(movieId: movie.id))
-        } label: {
-          if !viewModel.movies.isEmpty && !viewModel.isLoading {
+        } label: { 
+          if !movies.isEmpty && !viewModel.isLoading {
             MovieCardView(movie: movie, isDetailCard: false)
               .frame(maxWidth: .infinity, alignment: .center)
               .onAppear {
-                if movie.id == viewModel.movies.last?.id {
+                if movie.id == movies.last?.id {
                   viewModel.loadMovies()
                 }
               }
