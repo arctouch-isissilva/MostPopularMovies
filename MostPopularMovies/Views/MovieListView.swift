@@ -10,14 +10,14 @@ import SwiftUI
 struct MovieListView: View {
 
   @StateObject private var viewModel = MovieListViewModel()
-  @FetchRequest(entity: MovieEntity.entity(), sortDescriptors: []) var movies: FetchedResults<MovieEntity>
+  @FetchRequest(sortDescriptors: [SortDescriptor(\.voteAverage, order: .reverse)]) var movies: FetchedResults<MovieEntity>
   
   var body: some View {
     NavigationView {
       List(movies) { movie in
         NavigationLink {
-          MovieDetailView(viewModel: MovieDetailViewModel(movieId: movie.id))
-        } label: { 
+          MovieDetailView(viewModel: MovieDetailViewModel(movie: movie))
+        } label: {
           if !movies.isEmpty && !viewModel.isLoading {
             MovieCardView(movie: movie, isDetailCard: false)
               .frame(maxWidth: .infinity, alignment: .center)
@@ -38,6 +38,9 @@ struct MovieListView: View {
       .foregroundColor(.clear)
       .onAppear {
         viewModel.loadGenresAndMoviesList()
+        if movies.isEmpty {
+          viewModel.loadMovies()
+        }
       }
       .errorAlert(error: $viewModel.error)
     }

@@ -14,16 +14,16 @@ struct MovieDetailView: View {
   var body: some View {
     movieDetailCardView
       .onAppear {
-        viewModel.loadMovie(id: viewModel.movieId)
+        viewModel.loadMovie()
       }
       .errorAlert(error: $viewModel.error)
   }
   
   @ViewBuilder
   private var movieDetailCardView: some View {
-    if let movie = viewModel.movieEntity {
+    if (viewModel.movieEntity.overview != nil) {
       ScrollView {
-        MovieCardView(movie: movie, isDetailCard: true)
+        MovieCardView(movie: viewModel.movieEntity, isDetailCard: true)
       }
     } else {
       ProgressView()

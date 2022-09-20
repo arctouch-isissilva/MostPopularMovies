@@ -29,7 +29,6 @@ final class MovieListViewModel: ObservableObject {
       do {
         let genres = try await movieService.fetchGenresList().genres
         PersistenceManager.shared.saveDataOf(genres: genres)
-        loadMovies()
       } catch {
         self.error = MovieError.failedFetchingGenres
       }
@@ -44,7 +43,7 @@ final class MovieListViewModel: ObservableObject {
     Task {
       do {
         moviesResponse = try await movieService.fetchPopularMovies(with: currentPage)
-        PersistenceManager.shared.saveDataOf(movies: moviesResponse!.results)
+        PersistenceManager.shared.saveDataOf(movies: moviesResponse?.results ?? [])
       } catch {
         self.error = MovieError.failedFetchingMovies
       }

@@ -14,7 +14,7 @@ struct PersistenceManager {
   let container: NSPersistentContainer = NSPersistentContainer(name: "MovieContainer")
   
   init() {
-    container.loadPersistentStores { description, error in
+    container.loadPersistentStores { _, error in
       if let error = error {
         fatalError("Error: \(error.localizedDescription)")
       }
@@ -22,8 +22,7 @@ struct PersistenceManager {
   }
   
   func saveDataOf(movies: [Movie]) {
-    container.performBackgroundTask { (context) in
-      deleteDuplicated(movies: movies)
+    container.performBackgroundTask { _ in
       saveDataToCoreData(movies: movies)
     }
   }
@@ -35,24 +34,29 @@ struct PersistenceManager {
     }
   }
   
-  private func deleteDuplicated(movies: [Movie]) {
-    do {
-      let objects = try container.viewContext.fetch(MovieEntity.fetchRequest())
-        _ = objects.map { container.viewContext.delete($0) }
-      try container.viewContext.save()
-    } catch {
-      print("Deleting Error: \(error)")
-    }
-  }
-  
   private func deleteGenres() {
     do {
       let objects = try container.viewContext.fetch(GenreEntity.fetchRequest())
       _ = objects.map { container.viewContext.delete($0) }
       try container.viewContext.save()
     } catch {
-      print("Deleting Error: \(error)")
+      fatalError("Error: \(error.localizedDescription)")
     }
+  }
+  
+  private func deleteMovies() {
+    do {
+      let objects = try container.viewContext.fetch(MovieEntity.fetchRequest())
+      _ = objects.map { container.viewContext.delete($0) }
+      try container.viewContext.save()
+    } catch {
+      fatalError("Error: \(error.localizedDescription)")
+    }
+  }
+  
+  func deletePeresistentData() {
+    deleteGenres()
+    deleteMovies()
   }
   
   private func saveDataToCoreData(movies:[Movie]) {
@@ -61,12 +65,9 @@ struct PersistenceManager {
         let movieEntity: MovieEntity = NSEntityDescription.insertNewObject(forEntityName: "MovieEntity", into: container.viewContext) as! MovieEntity
         movieEntity.id =  movie.id
         movieEntity.title = movie.title
-        movieEntity.homepage = movie.homepage
         movieEntity.voteAverage = movie.voteAverage ?? 0
         movieEntity.posterPath = movie.posterPath
         movieEntity.backdropPath = movie.backdropPath
-        movieEntity.overview = movie.overview
-        movieEntity.runtime = movie.runtime ?? 0
         movieEntity.releaseDate = movie.releaseDate
         movieEntity.genresIds = movie.genreIds ?? []
       }
@@ -78,21 +79,15 @@ struct PersistenceManager {
     }
   }
   
-  func updateDataToCoreData(movie: Movie) {
-    container.viewContext.perform {
-      let movieEntity: MovieEntity = NSEntityDescription.insertNewObject(forEntityName: "MovieEntity", into: container.viewContext) as! MovieEntity
+  func updateDataToCoreData(movieEntity: MovieEntity, movie: Movie) async {
+    Task {
       movieEntity.homepage = movie.homepage
-      movieEntity.voteAverage = movie.voteAverage ?? 0
-      movieEntity.posterPath = movie.posterPath
-      movieEntity.backdropPath = movie.backdropPath
-      movieEntity.overview = movie.overview
       movieEntity.runtime = movie.runtime ?? 0
-      movieEntity.releaseDate = movie.releaseDate
-      movieEntity.genresIds = movie.genreIds ?? []
+      movieEntity.overview = movie.overview
       do {
         try container.viewContext.save()
       } catch {
-        fatalError("Failure to save context: \(error)")
+        fatalError("Failure to update context: \(error)")
       }
     }
   }
@@ -126,15 +121,5 @@ struct PersistenceManager {
     return fetchGenresList().filter { genre in
       ids.contains { genre.id == $0 }
     }.map { $0.name ?? "" }
-  }
-  
-  func getMovie(by id: Int) -> MovieEntity {
-    var movies: [MovieEntity] = []
-    do {
-      movies = try container.viewContext.fetch(MovieEntity.fetchRequest())
-    } catch {
-      print(error)
-    }
-    return movies.filter { $0.id == id }.first!
   }
 }
