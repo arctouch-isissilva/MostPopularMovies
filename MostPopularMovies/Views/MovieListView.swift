@@ -37,7 +37,12 @@ struct MovieListView: View {
       .listStyle(.inset)
       .foregroundColor(.clear)
       .onAppear {
-        viewModel.loadGenresAndMoviesList()
+        let lastDay = UserDefaults.standard.object(forKey: "LastRun") as? Date ?? Date()
+        if !Calendar.current.isDate(Date(), inSameDayAs: lastDay) {
+          PersistenceManager.shared.deleteMovies()
+          UserDefaults.standard.set(Date(), forKey:  "LastRun")
+        }
+        viewModel.loadGenres()
         if movies.isEmpty {
           viewModel.loadMovies()
         }

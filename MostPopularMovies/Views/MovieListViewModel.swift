@@ -21,7 +21,7 @@ final class MovieListViewModel: ObservableObject {
     self.movieService = movieService
   }
   
-  func loadGenresAndMoviesList() {
+  func loadGenres() {
     guard PersistenceManager.shared.fetchGenresList().isEmpty else { return }
     isLoading = true
     defer { isLoading = false }

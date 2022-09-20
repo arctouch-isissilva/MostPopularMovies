@@ -14,16 +14,19 @@ struct PersistenceManager {
   let container: NSPersistentContainer = NSPersistentContainer(name: "MovieContainer")
   
   init() {
-    container.loadPersistentStores { _, error in
+    container.loadPersistentStores { description, error in
       if let error = error {
-        fatalError("Error: \(error.localizedDescription)")
+        print("Core Data failed to load: \(error.localizedDescription)")
+        return
       }
     }
+    container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
   }
   
   func saveDataOf(movies: [Movie]) {
     container.performBackgroundTask { _ in
       saveDataToCoreData(movies: movies)
+      UserDefaults.standard.set(Date(), forKey:  "LastRun")
     }
   }
   
@@ -44,7 +47,7 @@ struct PersistenceManager {
     }
   }
   
-  private func deleteMovies() {
+  func deleteMovies() {
     do {
       let objects = try container.viewContext.fetch(MovieEntity.fetchRequest())
       _ = objects.map { container.viewContext.delete($0) }
@@ -54,12 +57,7 @@ struct PersistenceManager {
     }
   }
   
-  func deletePeresistentData() {
-    deleteGenres()
-    deleteMovies()
-  }
-  
-  private func saveDataToCoreData(movies:[Movie]) {
+  private func saveDataToCoreData(movies: [Movie]) {
     container.viewContext.perform {
       for movie in movies {
         let movieEntity: MovieEntity = NSEntityDescription.insertNewObject(forEntityName: "MovieEntity", into: container.viewContext) as! MovieEntity
