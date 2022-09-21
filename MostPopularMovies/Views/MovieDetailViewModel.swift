@@ -27,7 +27,7 @@ final class MovieDetailViewModel: ObservableObject {
     Task {
       do {
         let fetchedMovie = try await movieService.fetchMovieDetails(id: movieEntity.id)
-        await PersistenceManager.shared.updateDataToCoreData(movieEntity: movieEntity, movie: fetchedMovie)
+        PersistenceManager.shared.updateDataToCoreData(movieEntity: movieEntity, movie: fetchedMovie)
         fetchUpdatedMovie()
       } catch {
         self.error = MovieError.failedFetchingMovies

@@ -24,43 +24,47 @@ struct PersistenceManager {
   }
   
   func saveDataOf(movies: [Movie]) {
-    container.performBackgroundTask { _ in
+    container.viewContext.performAndWait {
       saveDataToCoreData(movies: movies)
       UserDefaults.standard.set(Date(), forKey:  "LastRun")
     }
   }
   
   func saveDataOf(genres: [Genre]) {
-    container.performBackgroundTask { _ in
+    container.viewContext.performAndWait {
       deleteGenres()
       saveGenresToCoreData(genres: genres)
     }
   }
   
   private func deleteGenres() {
-    do {
-      let objects = try container.viewContext.fetch(GenreEntity.fetchRequest())
-      _ = objects.map { container.viewContext.delete($0) }
-      try container.viewContext.save()
-    } catch {
-      fatalError("Error: \(error.localizedDescription)")
+    container.viewContext.performAndWait {
+      do {
+        let objects = try container.viewContext.fetch(GenreEntity.fetchRequest())
+        _ = objects.map { container.viewContext.delete($0) }
+        try container.viewContext.save()
+      } catch {
+        fatalError("Error: \(error.localizedDescription)")
+      }
     }
   }
   
   func deleteMovies() {
-    do {
-      let objects = try container.viewContext.fetch(MovieEntity.fetchRequest())
-      _ = objects.map { container.viewContext.delete($0) }
-      try container.viewContext.save()
-    } catch {
-      fatalError("Error: \(error.localizedDescription)")
+    container.viewContext.performAndWait {
+      do {
+        let objects = try container.viewContext.fetch(MovieEntity.fetchRequest())
+        _ = objects.map { container.viewContext.delete($0) }
+        try container.viewContext.save()
+      } catch {
+        fatalError("Error: \(error.localizedDescription)")
+      }
     }
   }
   
   private func saveDataToCoreData(movies: [Movie]) {
     container.viewContext.perform {
       for movie in movies {
-        let movieEntity: MovieEntity = NSEntityDescription.insertNewObject(forEntityName: "MovieEntity", into: container.viewContext) as! MovieEntity
+        let movieEntity: MovieEntity = MovieEntity(context: container.viewContext)
         movieEntity.id =  movie.id
         movieEntity.title = movie.title
         movieEntity.voteAverage = movie.voteAverage ?? 0
@@ -77,8 +81,8 @@ struct PersistenceManager {
     }
   }
   
-  func updateDataToCoreData(movieEntity: MovieEntity, movie: Movie) async {
-    Task {
+  func updateDataToCoreData(movieEntity: MovieEntity, movie: Movie) {
+    container.viewContext.performAndWait {
       movieEntity.homepage = movie.homepage
       movieEntity.runtime = movie.runtime ?? 0
       movieEntity.overview = movie.overview
