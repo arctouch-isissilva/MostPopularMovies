@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct MovieListView: View {
-
   @StateObject private var viewModel = MovieListViewModel()
-  @FetchRequest(sortDescriptors: [SortDescriptor(\.voteAverage, order: .reverse)]) var movies: FetchedResults<MovieEntity>
   
   var body: some View {
+    let movies = viewModel.persistece.moviesEntity
     NavigationView {
       List(movies) { movie in
         NavigationLink {
-          MovieDetailView(viewModel: MovieDetailViewModel(movie: movie))
+          MovieDetailView(viewModel: MovieDetailViewModel(movieId: movie.id))
         } label: {
           if !movies.isEmpty && !viewModel.isLoading {
             MovieCardView(movie: movie, isDetailCard: false)

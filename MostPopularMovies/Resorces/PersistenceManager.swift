@@ -8,12 +8,17 @@
 import CoreData
 import Foundation
 
-struct PersistenceManager {
-  
+class PersistenceManager: NSObject, ObservableObject {
   static let shared = PersistenceManager()
   let container: NSPersistentContainer = NSPersistentContainer(name: "MovieContainer")
-  
-  init() {
+  @Published var moviesEntity: [MovieEntity] = []
+  private let controller: NSFetchedResultsController<MovieEntity>
+
+  override init() {
+    controller = NSFetchedResultsController(fetchRequest: MovieEntity.movieFetchRequest,
+                                            managedObjectContext: container.viewContext,
+                                            sectionNameKeyPath: nil, cacheName: nil)
+    super.init()
     container.loadPersistentStores { description, error in
       if let error = error {
         print("Core Data failed to load: \(error.localizedDescription)")
@@ -21,6 +26,14 @@ struct PersistenceManager {
       }
     }
     container.viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+    
+    controller.delegate = self
+    do {
+      try controller.performFetch()
+      moviesEntity = controller.fetchedObjects ?? []
+    } catch {
+      print("Failed fetch")
+    }
   }
   
   func saveDataOf(movies: [Movie]) {
@@ -62,7 +75,7 @@ struct PersistenceManager {
   }
   
   private func saveDataToCoreData(movies: [Movie]) {
-    container.viewContext.perform {
+    container.viewContext.performAndWait {
       for movie in movies {
         let movieEntity: MovieEntity = MovieEntity(context: container.viewContext)
         movieEntity.id =  movie.id
@@ -81,28 +94,35 @@ struct PersistenceManager {
     }
   }
   
-  func updateDataToCoreData(movieEntity: MovieEntity, movie: Movie) {
+  func updateDataToCoreData(movie: Movie) -> MovieEntity {
+    let fetch = MovieEntity.movieFetchRequest
+    fetch.predicate = NSPredicate(format: "id == %d", movie.id)
+    let moviee = moviesEntity.first { $0.id == movie.id }
+    moviee?.objectWillChange.send()
+    
     container.viewContext.performAndWait {
-      movieEntity.homepage = movie.homepage
-      movieEntity.runtime = movie.runtime ?? 0
-      movieEntity.overview = movie.overview
+      moviee?.homepage = movie.homepage
+      moviee?.runtime = movie.runtime ?? 0
+      moviee?.overview = movie.overview
       do {
         try container.viewContext.save()
       } catch {
         fatalError("Failure to update context: \(error)")
       }
     }
+    guard let moviea = moviee else { return MovieEntity(context: container.viewContext) }
+    return moviea
   }
   
   private func saveGenresToCoreData(genres: [Genre]) {
     container.viewContext.perform {
       for genre in genres {
-        let genreEntity = GenreEntity(context: container.viewContext)
+        let genreEntity = GenreEntity(context: self.container.viewContext)
         genreEntity.id = genre.id
         genreEntity.name = genre.name
       }
       do {
-        try container.viewContext.save()
+        try self.container.viewContext.save()
       } catch {
         fatalError("Failure to save context: \(error)")
       }
@@ -123,5 +143,21 @@ struct PersistenceManager {
     return fetchGenresList().filter { genre in
       ids.contains { genre.id == $0 }
     }.map { $0.name ?? "" }
+  }
+}
+
+extension PersistenceManager: NSFetchedResultsControllerDelegate {
+  func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    guard let movies = controller.fetchedObjects as? [MovieEntity] else { return }
+    moviesEntity = movies
+  }
+}
+
+extension MovieEntity {
+  static var movieFetchRequest: NSFetchRequest<MovieEntity> {
+    let request: NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
+    request.sortDescriptors = [NSSortDescriptor(key: "voteAverage", ascending: false)]
+    
+    return request
   }
 }

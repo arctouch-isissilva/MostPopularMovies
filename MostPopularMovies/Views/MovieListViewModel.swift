@@ -14,6 +14,7 @@ final class MovieListViewModel: ObservableObject {
   @Published var isLoading: Bool = false
   @Published var error: MovieError?
   @Published var currentPage = 0
+  @ObservedObject var persistece: PersistenceManager = PersistenceManager.shared
   private let movieService: MovieService
   private var moviesResponse: PopularMoviesResponse?
   

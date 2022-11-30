@@ -61,21 +61,4 @@ extension MovieEntity {
   }
 }
 
-// MARK: Generated accessors for genres
-extension MovieEntity {
-  
-  @objc(addGenresObject:)
-  @NSManaged public func addToGenres(_ value: GenreEntity)
-  
-  @objc(removeGenresObject:)
-  @NSManaged public func removeFromGenres(_ value: GenreEntity)
-  
-  @objc(addGenres:)
-  @NSManaged public func addToGenres(_ values: NSSet)
-  
-  @objc(removeGenres:)
-  @NSManaged public func removeFromGenres(_ values: NSSet)
-  
-}
-
 extension MovieEntity : Identifiable {}
